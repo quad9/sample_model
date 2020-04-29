@@ -26,7 +26,7 @@ subscriberSchema = new Schema({
   courses: [{ type: Schema.Types.ObjectId, ref: "Course" }]
   }, {
       timestamps: true
-     }
+  }
 );
 
 // メソッドを設定する

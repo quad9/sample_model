@@ -1,5 +1,9 @@
 # study Node.js
 
-learn form.
+## 課題
 
-text: [Express チュートリアル Part 6: フォームの操作](https://developer.mozilla.org/ja/docs/Learn/Server-side/Express_Nodejs/forms)
+* `express-validator`のrequireはこれでいいのか？
+
+```{ check, validationResult } = require('express-validator');```
+
+* `models/user.js` L12 sanitizeBodyメソッドについて、これは非推奨ということなので`body`を使ったが`not found`の`error`になる。
