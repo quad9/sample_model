@@ -6,6 +6,24 @@ module.exports = {
   new: (req, res) => {
     res.render("users/new");
   },
+  validate: (req, res, next) => {
+    console.log(req.body);
+    console.log(req.body.email);
+    // req.sanitizeBody("email").nomalizeEmail({
+    //   all_lowcase: true
+    // }).trim();
+    // req.check("email", "Email is invalid").isEmail();
+    // req.getValidationResult().then((err) => {
+    //   if (!err.isEmpty()) {
+    //     let messages = err.array().map(e => e.msg);
+    //     req.skip = true;
+    //     res.locals.redirect = "/user/new";
+    //     next();
+    //   } else {
+    //     next();
+    //   }
+    // });
+  },
   create: (req, res, next) => {
     let userParams = {
       name: {
@@ -111,19 +129,3 @@ module.exports = {
     res.render("users/index");
   }
 };
-
-// 上のコードは『locals』メソッドを使う場合。
-// module.exports = {
-//   index: (req, res) => {
-//     User.find({})
-//       .then(users => {
-//         res.render("users/index", {
-//           users: users
-//         })
-//       })
-//       .catch(err => {
-//         console.log(`Error fetching users: ${ err.message }`);
-//         res.redirect("/");
-//       });
-//   }
-// };

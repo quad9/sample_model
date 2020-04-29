@@ -4,7 +4,8 @@
 const express = require("express"),
       app = express(),
       router = express.Router(),
-      bodyParser = require("body-parser");
+      bodyParser = require("body-parser"),
+      { check, validationResult } = require('express-validator');
 
 // portの確保（オプション--環境変数で指定がなければ3000番を使う。）
 app.set("port", process.env.PORT || 3000);
@@ -27,7 +28,6 @@ mongoose.connect(
     useNewUrlParser: true });
   mongoose.set("useCreateIndex", true);
   mongoose.set('useFindAndModify', false);
-
 
   //   mongoDBへ該当のDBを接続
   const db = mongoose.connection;
@@ -57,11 +57,13 @@ router.use(layouts);
 const subscribersCtl = require("./controllers/subscribersCtl");
 const usersCtl = require("./controllers/usersCtl");
 
-// // PUTメソッドをエミュレートするためのモジュールをロードする
-// const methodOverride = require("method-override");
-// router.use(methodOverride("_method", {
-//   methods: ["POST", "GET"]
-// }));
+// PUTメソッドをエミュレートするためのモジュールをロードする
+const methodOverride = require("method-override");
+router.use(methodOverride("_method", {
+  methods: ["POST", "GET"]
+}));
+
+router.use(check());
 
 // 経路
 //   リクエストが来た時の反応をここでスイッチングしていく
@@ -74,6 +76,16 @@ router.get("/", (req, res) => {
   res.render("index");
 });
 
+// for user module
+// router.get("/users", usersCtl.index);
+router.get("/users", usersCtl.index, usersCtl.indexView);
+router.get("/users/new", usersCtl.new);
+router.post("/users/create", usersCtl.create, usersCtl.validate, usersCtl.redirectView);
+router.get("/users/:id", usersCtl.show, usersCtl.showView);
+router.get("/users/:id/edit", usersCtl.edit);
+router.put("/users/:id/update", usersCtl.update, usersCtl.redirectView);
+router.delete("/users/:id/delete", usersCtl.delete, usersCtl.redirectView);
+
 // for subscriber module
 router.get("/subscribers", subscribersCtl.index, subscribersCtl.indexView);
 router.get("/subscribers/new", subscribersCtl.new);
@@ -82,16 +94,6 @@ router.get("/subscribers/:id", subscribersCtl.show, subscribersCtl.showView);
 router.get("/subscribers/:id/edit", subscribersCtl.edit);
 router.put("/subscribers/:id/update", subscribersCtl.update, subscribersCtl.redirectView);
 router.delete("/subscribers/:id/delete", subscribersCtl.delete, subscribersCtl.redirectView);
-
-// for user module
-// router.get("/users", usersCtl.index);
-router.get("/users", usersCtl.index, usersCtl.indexView);
-router.get("/users/new", usersCtl.new);
-router.post("/users/create", usersCtl.create, usersCtl.redirectView);
-router.get("/users/:id", usersCtl.show, usersCtl.showView);
-router.get("/users/:id/edit", usersCtl.edit);
-router.put("/users/:id/update", usersCtl.update, usersCtl.redirectView);
-router.delete("/users/:id/delete", usersCtl.delete, usersCtl.redirectView);
 
 // アプリがPORTを監視するための設定
 app.listen(app.get("port"), () => {
