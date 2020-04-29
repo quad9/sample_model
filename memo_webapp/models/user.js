@@ -1,16 +1,8 @@
 "use strict";
 
-// 接続に成功したら後で削除する行
-// const Subscriber = require("./subscriber")
-
-// 勿論このやり方もあるが、このアプリでは以下にで統一。
-// const mongoose = require("mongoose"),
-//         Schema = mongoose.Schema;
-
 const mongoose = require("mongoose"),
 { Schema } = mongoose,
 Subscriber = require("./subscriber"),
-Course = require("./course")
 userSchema = new Schema({
   name: {
     first: {
